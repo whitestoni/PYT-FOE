@@ -1,6 +1,8 @@
 import pprint, pickle
 import pyHook
 import pythoncom
+import sys
+import time
 
 gClicks = []
 
@@ -20,21 +22,35 @@ def onclick(event):
     global gClicks
     data = event.Position
     print data
-    gClicks.add(event.Position)
+    gClicks.append(event.Position)
     return True
+
+def onKeyBoard(event):
+    global gClicks
+    print event.Key
+    if event.Key == 'Q':
+        hm.UnhookMouse()
+        hm.UnhookKeyboard()
+        print 'Exit!!'
+        sys.exit(0)
+        return False
+    elif event.Key == 'R':
+        gClicks = []
+        print 'Reset Data'
+        time.sleep(1)
+    elif event.Key == 'S':
+        saveData(gClicks)
+        print 'Saved!!'
+        time.sleep(1)
+    return True
+
 
 #install mouse callback
 hm = pyHook.HookManager()
 hm.SubscribeMouseAllButtonsDown(onclick)
+hm.SubscribeKeyAll(onKeyBoard)
 hm.HookMouse()
+hm.HookKeyboard()
 pythoncom.PumpMessages()
-
-while True:
-    choice = raw_input("> ")
-
-    if choice == 's' :
-        print "Quiting..."
-        break
-
 hm.UnhookMouse()
-saveData(gClicks)
+hm.UnHookKeyboard()
