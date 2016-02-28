@@ -1,2 +1,2 @@
 # PYT-FOE
-Money collector for FOE
+Projects related to FOE
